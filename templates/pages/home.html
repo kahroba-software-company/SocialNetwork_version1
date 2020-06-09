@@ -5,5 +5,76 @@ thi is nice111
 {% endblock %}
 
 {% block content %}
-Welcome to Tweetme
+<div class='row text-center '>
+
+    <div class='col'>
+        <h1>Welcome to SocialNetwork</h1>
+    </div>
+
+
+</div>
+<div class="row" id="tweets">
+    Loading ...
+</div>
+
+<script>
+    const tweetsElement = document.getElementById("tweets") //$("#tweets")
+    // tweetsElement.innerHTML = 'Loading...'
+    //
+    // var el1 = "<h1>Hi there</h1>"
+    // var el2 = "<h2>Hi there</h2>"
+    // var el3 = "<h3>Hi there</h3>"
+    //
+    // tweetsElement.innerHTML = el1 + el2 + el3
+
+
+
+    const xhr = new XMLHttpRequest() // xhr = SomeClass()
+    const method = 'GET' //'POST'
+    const url = "/tweets"
+    const responseType = "json"
+
+    // var currentItem => formatTweetElement() => LikeBtn => handleDidLike()
+
+    function handleDidLike (tweet_id, currentCount) {
+        console.log(tweet_id, currentCount)
+        return
+    }
+
+    function LikeBtn(tweet) {
+        return "<button class='btn btn-primary btn-sm' onclick=handleDidLike(" +
+        tweet.id + "," + tweet.likes + ")>" + tweet.likes + " Likes</button>"
+    }
+
+    function formatTweetElement(tweet) {
+        var formattedTweet = "<div class='mx-auto border-top rounded py-3 mb-4 tweet' id=' tweet- "+ tweet.id + "'><div>" + tweet.content +
+          "</p><div class='btn-group'>" + LikeBtn(tweet) +
+            "</div></div>"
+
+        return formattedTweet
+    }
+
+    xhr.responseType = responseType
+    xhr.open(method, url)
+    xhr.onload = function () {
+        console.log(xhr.response)
+        const serverResponse = xhr.response
+        var listedItems = serverResponse.response //data.response
+        var finalTweetStr = ""
+        var i;
+        for (i=0;i<listedItems.length; i++){
+            // console.log(i)
+            // console.log(listedItems[i])
+            var tweetObj = listedItems[i]
+            var currentItem = formatTweetElement(tweetObj)
+                finalTweetStr += currentItem
+        }
+        tweetsElement.innerHTML = finalTweetStr
+
+        // console.log(listedItems) //xhr.response.response
+    }
+    xhr.send()
+
+
+</script >
 {% endblock content %}
