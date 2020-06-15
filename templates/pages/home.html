@@ -63,12 +63,6 @@ social_network
         xhr.send()
     }
 
-    loadTweets(tweetsEl)
-
-
-
-
-
     // var currentItem => formatTweetElement() => LikeBtn => handleDidLike()
     //3
     function handleDidLike (tweet_id, currentCount) {
@@ -88,14 +82,51 @@ social_network
 
         return formattedTweet
     }
+    //load the data and show in the page for the first Time
+    loadTweets(tweetsEl)
 
-    //lets play with dynamic ojects in this page
+    //lets play with dynamic objects in this page
+
+    //we are sending data to the url that we want
+    //and we want to refresh rhe page and get the new list of data
+    //and show the data again
     function handleTweetCreateFormDidSubmit(event) {
         event.preventDefault()
-        console.log(event)
-
-
+        const myForm = event.target
+        const myFormData = new FormData(myForm)
+        const url = myForm.getAttribute("action")
+        const method = myForm.getAttribute("method")
+        const xhr = new XMLHttpRequest()
+        xhr.open(method, url)
+        xhr.onload = function() {
+            const serverResponse = xhr.response
+            // console.log(serverResponse)
+            const tweetsEl = document.getElementById("tweets")
+            loadTweets(tweetsEl)
+        }
+        //sending the data to backend
+        xhr.send(myFormData)
     }
+        // console.log(url, method)
+            // for (var myItem of myFormData.entries()){
+            //     console.log(myItem)
+            // }
+        //myFormData , its a list of objects
+        //let person1 = new Object();
+        /*
+        const object1 = {
+          a: 'somestring',
+          b: 42
+        };*/
+        //for (let [key, value] of Object.entries(object1)) {
+        // console.log(`${key}: ${value}`);
+        //}
+        // expected output:
+        // "a: somestring"
+        // "b: 42"
+
+    //    console.log(event.target)
+    //    console.log(event)
 
     const tweetCreateFormEl = document.getElementById("tweet-create-form")
     tweetCreateFormEl.addEventListener("submit", handleTweetCreateFormDidSubmit)
