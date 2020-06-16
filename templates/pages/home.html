@@ -26,7 +26,7 @@ social_network
 </div>
 
 <script>
-    const tweetsEl = document.getElementById("tweets") //$("#tweets")
+    const tweetsContainerElement = document.getElementById("tweets") //$("#tweets")
     // tweetsElement.innerHTML = 'Loading...'
     //
     // var el1 = "<h1>Hi there</h1>"
@@ -83,7 +83,7 @@ social_network
         return formattedTweet
     }
     //load the data and show in the page for the first Time
-    loadTweets(tweetsEl)
+    loadTweets(tweetsContainerElement)
 
     //lets play with dynamic objects in this page
 
@@ -97,12 +97,25 @@ social_network
         const url = myForm.getAttribute("action")
         const method = myForm.getAttribute("method")
         const xhr = new XMLHttpRequest()
+        //we should set json
+        const responseType = "json"
+        xhr.responseType = responseType
+                //we should set the header tp complete AJAX
         xhr.open(method, url)
+        xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest")
+        xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
         xhr.onload = function() {
-            const serverResponse = xhr.response
-            // console.log(serverResponse)
-            const tweetsEl = document.getElementById("tweets")
-            loadTweets(tweetsEl)
+            if (xhr.status ===201){
+                const newTweetJson = xhr.response
+                // const newTweetJson = JSON.parse(newTweet)
+                console.log(newTweetJson.likes)
+                const newTweetElement = formatTweetElement(newTweetJson)
+                console.log(newTweetElement)
+                tweetsContainerElement.prepend(newTweetElement)
+            }
+            // console.log(xhr.status, serverResponse)
+            // const tweetsEl = document.getElementById("tweets")
+            // loadTweets(tweetsEl)
         }
         //sending the data to backend
         xhr.send(myFormData)

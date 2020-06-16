@@ -15,6 +15,9 @@ def home_view(request, *args, **kwargs):
 
 
 def tweet_create_view(request, *args, **kwargs):
+    #to check that the request is ajax or not
+    # print("ajax", request.is_ajax())
+
     form = TweetForm(request.POST or None)
     # print('post data is', request.POST)
     #we have a hidden input , its name is next
@@ -24,7 +27,8 @@ def tweet_create_view(request, *args, **kwargs):
         obj = form.save(commit=False)
         #we can do other form related logic later
         obj.save()
-
+        if request.is_ajax():
+            return JsonResponse(obj.serialize(), status=201)#201 == created items
         if next_url != None and is_safe_url(next_url, ALLOWED_HOSTS):
             return redirect(next_url)
         form = TweetForm()
@@ -39,7 +43,8 @@ def tweet_list_view(request, *args, **kwargs):
     return json data
     """
     qs = Tweet.objects.all()
-    tweets_list = [{"id": x.id, "content": x.content, "likes": random.randint(0, 122)} for x in qs]
+    tweets_list = [x.serialize() for x in qs]
+    # tweets_list = [{"id": x.id, "content": x.content, "likes": random.randint(0, 122)} for x in qs]
     data = {
         "isUser": False,
         "response": tweets_list
