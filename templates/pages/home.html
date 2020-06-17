@@ -16,7 +16,7 @@ social_network
         <form class='form' id="tweet-create-form" method='POST' action='/create-tweet/'>
             {% csrf_token %}
             <input type='hidden' value='/' name='next' />
-            <textarea class='form-control' name='content' placeholder='Your tweet...'></textarea>
+            <textarea required="required" class='form-control' name='content' placeholder='Your tweet...'></textarea>
             <button type='submit' class='btn btn-primary'>Tweet</button>
         </form>
     </div>
@@ -110,8 +110,13 @@ social_network
                 // const newTweetJson = JSON.parse(newTweet)
                 console.log(newTweetJson.likes)
                 const newTweetElement = formatTweetElement(newTweetJson)
-                console.log(newTweetElement)
-                tweetsContainerElement.prepend(newTweetElement)
+                // console.log(newTweetElement)
+                //ogHtml is all the oldest tweets
+                //newTweetElement is the last tweet that is created now
+                const ogHtml = tweetsContainerElement.innerHTML
+                tweetsContainerElement.innerHTML = newTweetElement + ogHtml
+                //clean the form after tweet
+                myForm.reset()
             }
             // console.log(xhr.status, serverResponse)
             // const tweetsEl = document.getElementById("tweets")
